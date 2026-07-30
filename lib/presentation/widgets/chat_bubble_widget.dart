@@ -3,11 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../domain/entities/chat_message_entity.dart';
 
+/// ---------------------------------------------------------------------------
+/// 💬 CHAT BUBBLE WIDGET (চ্যাট বাব্‌ল উইজেট)
+/// ---------------------------------------------------------------------------
+/// নতুনদের জন্য ব্যাখ্যা:
+/// ইউজারের মেসেজ (ডানপাশে) এবং AI এর মেসেজ (বামপাশে) বিভিন্ন রঙ ও ডিজাইনে ডিসপ্লে করে।
+/// এতে ৩টি ফিচার যুক্ত আছে:
+/// ১. MarkdownBody: ChatGPT এর মতো কোড হাইলাইটিং, বুলেট পয়েন্ট রেন্ডার করার জন্য।
+/// ২. Timestamp: মেসেজের নিচে সময় প্রদর্শন (যেমন: 10:45 AM)।
+/// ৩. Copy Button: এক ক্লিকে মেসেজটি ক্লিপবোর্ডে কপি করা।
+/// ---------------------------------------------------------------------------
+
 class ChatBubbleWidget extends StatelessWidget {
   final ChatMessageEntity message;
 
   const ChatBubbleWidget({super.key, required this.message});
 
+  /// মেসেজ টেক্সট সিস্টেম ক্লিপবোর্ডে কপি করে SnackBar দেখানো
   void _copyToClipboard(BuildContext context) {
     Clipboard.setData(ClipboardData(text: message.text));
     ScaffoldMessenger.of(context).showSnackBar(
@@ -19,6 +31,7 @@ class ChatBubbleWidget extends StatelessWidget {
     );
   }
 
+  /// DateTime কে সুন্দর সময় ফরম্যাটে (e.g. 10:45 AM) রূপান্তর করার হেলপার মেথড
   String _formatTime(DateTime dateTime) {
     final hour = dateTime.hour == 0
         ? 12
@@ -35,6 +48,7 @@ class ChatBubbleWidget extends StatelessWidget {
     final formattedTime = _formatTime(message.timestamp);
 
     return Align(
+      // ইউজার হলে ডানপাশে, AI হলে বামপাশে অ্যালাইনমেন্ট
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6),
@@ -58,7 +72,7 @@ class ChatBubbleWidget extends StatelessWidget {
             /*
             // ----------------------------------------------------
             // PREVIOUS (Simple Text Widget): প্লেইন টেক্সট দেখায়
-            // (শিক্ষার জন্য কমেন্ট করা হলো)
+            // (শিক্ষার জন্য কমেন্ট করে রাখা হলো)
             // ----------------------------------------------------
             Text(
               message.text,
@@ -76,7 +90,7 @@ class ChatBubbleWidget extends StatelessWidget {
             // ----------------------------------------------------
             MarkdownBody(
               data: message.text.isEmpty ? '...' : message.text,
-              selectable: true,
+              selectable: true, // সিলেক্ট ও কপি সাপোর্ট
               styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
                 p: TextStyle(
                   color: isUser ? colorScheme.onPrimary : colorScheme.onSurface,
@@ -99,6 +113,8 @@ class ChatBubbleWidget extends StatelessWidget {
             ),
 
             const SizedBox(height: 6),
+            
+            // সময় (Timestamp) ও কপি বাটন (Copy Button)
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
