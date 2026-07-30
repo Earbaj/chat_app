@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/di/injection_container.dart';
 import '../../domain/entities/chat_message_entity.dart';
+import '../../domain/usecases/get_chat_history_usecase.dart';
+import '../../domain/usecases/save_chat_history_usecase.dart';
 import '../../domain/usecases/send_chat_message_usecase.dart';
 import '../state/chat_state.dart';
 
@@ -15,54 +17,30 @@ import '../state/chat_state.dart';
 
 class ChatViewModel extends StateNotifier<ChatState> {
   final SendChatMessageUseCase _sendChatMessageUseCase;
+  final GetChatHistoryUseCase _getChatHistoryUseCase;
+  final SaveChatHistoryUseCase _saveChatHistoryUseCase;
 
-  // DI এর মাধ্যমে SendChatMessageUseCase গ্রহণ করা
-  ChatViewModel(this._sendChatMessageUseCase) : super(ChatState.initial());
-
-  /*
-  // ----------------------------------------------------
-  // PREVIOUS (Non-Streaming sendMessage): পুরো রেসপন্স একসাথে আসার পর দেখায়
-  // (শিক্ষার জন্য কমেন্ট করে রাখা হলো)
-  // ----------------------------------------------------
-  Future<void> sendMessage(String promptText) async {
-    final String cleanPrompt = promptText.trim();
-    if (cleanPrompt.isEmpty || state.isLoading) return;
-
-    final userMsg = ChatMessageEntity(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      text: cleanPrompt,
-      isUser: true,
-    );
-
-    state = state.copyWith(
-      messages: [...state.messages, userMsg],
-      isLoading: true,
-      errorMessage: null,
-    );
-
-    try {
-      final aiReplyMsg = await _sendChatMessageUseCase(cleanPrompt);
-      state = state.copyWith(
-        messages: [...state.messages, aiReplyMsg],
-        isLoading: false,
-      );
-    } catch (e) {
-      final errorMsg = ChatMessageEntity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        text: 'Error fetching response: $e',
-        isUser: false,
-      );
-      state = state.copyWith(
-        messages: [...state.messages, errorMsg],
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
+  ChatViewModel(
+    this._sendChatMessageUseCase,
+    this._getChatHistoryUseCase,
+    this._saveChatHistoryUseCase,
+  ) : super(ChatState.initial()) {
+    // ViewModel তৈরি হওয়ার সাথে সাথে লোকাল ক্যাশ থেকে চ্যাট হিস্ট্রি লোড হবে
+    _loadCachedHistory();
   }
-  */
+
+  /// ১. SharedPreferences থেকে সেভ থাকা অতীত চ্যাট মেসেজ লোড করার মেথড
+  Future<void> _loadCachedHistory() async {
+    try {
+      final cachedMessages = await _getChatHistoryUseCase();
+      if (cachedMessages.isNotEmpty) {
+        state = state.copyWith(messages: cachedMessages);
+      }
+    } catch (_) {}
+  }
 
   // ----------------------------------------------------
-  // NEW (Streaming sendMessage): ChatGPT-এর মতো রিয়েল-টাইমে টাইপিং লাইভ আপডেট করবে
+  // STREAMING sendMessage: ChatGPT/Gemini-এর মতো রিয়েল-টাইমে টাইপিং এবং ক্যাশিং সাপোর্ট
   // ----------------------------------------------------
   Future<void> sendMessage(String promptText) async {
     final String cleanPrompt = promptText.trim();
@@ -75,7 +53,7 @@ class ChatViewModel extends StateNotifier<ChatState> {
       isUser: true,
     );
 
-    // ২. AI রেসপন্সের জন্য একটি খালি (Empty) মেসেজ বাব্‌ল তৈরি করা হলো যাতে শব্দগুলো আসার সাথে সাথে এতে যুক্ত হতে পারে
+    // ২. AI রেসপন্সের জন্য একটি খালি (Empty) মেসেজ বাব্‌ল তৈরি করা হলো
     final String aiMessageId = (DateTime.now().millisecondsSinceEpoch + 1).toString();
     final aiPlaceholderMsg = ChatMessageEntity(
       id: aiMessageId,
@@ -112,17 +90,16 @@ class ChatViewModel extends StateNotifier<ChatState> {
           return msg;
         }).toList();
 
-        // স্টেট আপডেট করায় UI রিয়েল-টাইমে টাইপিং দেখাবে
         state = state.copyWith(
           messages: updatedMessages,
           isLoading: true,
         );
       }
 
-      // ৫. স্ট্রীম সম্পন্ন হলে লোডিং ইন্ডিকেটর অফ হবে
+      // ৫. স্ট্রীম সম্পন্ন হলে লোডিং বন্ধ হবে এবং চ্যাট হিস্ট্রি লোকালি সেভ করা হবে
       state = state.copyWith(isLoading: false);
+      await _saveChatHistoryUseCase(state.messages);
     } catch (e) {
-      // কোনো সমস্যা বা এরর হলে মেসেজ উইজেটে এরর টেক্সট আপডেট করা
       final updatedMessages = state.messages.map((msg) {
         if (msg.id == aiMessageId) {
           return ChatMessageEntity(
@@ -142,18 +119,22 @@ class ChatViewModel extends StateNotifier<ChatState> {
         isLoading: false,
         errorMessage: e.toString(),
       );
+      await _saveChatHistoryUseCase(state.messages);
     }
   }
 
-  /// চ্যাট হিস্ট্রি মুছে ফেলার মেথড
-  void clearChat() {
+  /// চ্যাট হিস্ট্রি মুছে ফেলার মেথড (স্টেট ও লোকাল ক্যাশ উভয়ই ক্লিয়ার হবে)
+  Future<void> clearChat() async {
     state = ChatState.initial();
+    await _saveChatHistoryUseCase([]);
   }
 }
 
 /// Riverpod StateNotifierProvider যা পুরো অ্যাপে ChatViewModel কে সরবরাহ করে
 final chatViewModelProvider =
     StateNotifierProvider<ChatViewModel, ChatState>((ref) {
-  final useCase = ref.watch(sendChatMessageUseCaseProvider);
-  return ChatViewModel(useCase);
+  final sendUseCase = ref.watch(sendChatMessageUseCaseProvider);
+  final getHistoryUseCase = ref.watch(getChatHistoryUseCaseProvider);
+  final saveHistoryUseCase = ref.watch(saveChatHistoryUseCaseProvider);
+  return ChatViewModel(sendUseCase, getHistoryUseCase, saveHistoryUseCase);
 });

@@ -34,7 +34,17 @@ class ChatMessageModel extends ChatMessageEntity {
     );
   }
 
-  /// লোকাল ডেটাবেজ বা লোকাল স্টোরেজে সংরক্ষণের জন্য JSON ম্যাপ এ রূপান্তর
+  /// JSON ম্যাপ থেকে মডেল অবজেক্ট তৈরির ফ্যাক্টরি কনস্ট্রাক্টর (Local Caching Deserialization)
+  factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
+    return ChatMessageModel(
+      id: json['id'] as String,
+      text: json['text'] as String,
+      isUser: json['isUser'] as bool,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+    );
+  }
+
+  /// লোকাল ডেটাবেজ বা লোকাল স্টোরেজে সংরক্ষণের জন্য JSON ম্যাপ এ রূপান্তর (Serialization)
   Map<String, dynamic> toJson() {
     return {
       'id': id,

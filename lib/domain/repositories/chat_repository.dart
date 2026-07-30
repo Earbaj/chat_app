@@ -20,8 +20,14 @@ abstract class ChatRepository {
   */
 
   // ----------------------------------------------------
-  // NEW (Streaming Method - Stream):
-  // ChatGPT-এর মতো রিয়েল-টাইমে শব্দ বা অক্ষর স্ট্রীম করে
+  // Streaming Method - Real-time AI response
   // ----------------------------------------------------
   Stream<String> fetchAiResponseStream(String topic);
+
+  // ----------------------------------------------------
+  // Local Caching Methods - চ্যাট হিস্ট্রি ক্যাশিং
+  // ----------------------------------------------------
+  Future<void> saveChatHistory(List<ChatMessageEntity> messages);
+  Future<List<ChatMessageEntity>> getChatHistory();
+  Future<void> clearChatHistory();
 }
