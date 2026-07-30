@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/theme_provider.dart';
 import '../viewmodel/chat_viewmodel.dart';
 import '../widgets/chat_bubble_widget.dart';
+import '../widgets/chat_input_field.dart';
 import '../widgets/suggestion_chips_widget.dart';
-
-// Inside _ChatViewState:
-  void _onSelectSuggestion(String topic) {
-    ref.read(chatViewModelProvider.notifier).sendMessage(topic);
-    _scrollToBottom();
-  }
-
 
 class ChatView extends ConsumerStatefulWidget {
   const ChatView({super.key});
@@ -28,6 +23,11 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
     _textController.clear();
     ref.read(chatViewModelProvider.notifier).sendMessage(text);
+    _scrollToBottom();
+  }
+
+  void _onSelectSuggestion(String topic) {
+    ref.read(chatViewModelProvider.notifier).sendMessage(topic);
     _scrollToBottom();
   }
 
@@ -69,6 +69,8 @@ class _ChatViewState extends ConsumerState<ChatView> {
   @override
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatViewModelProvider);
+    final themeMode = ref.watch(themeNotifierProvider);
+    final isDark = themeMode == ThemeMode.dark;
 
     // Auto scroll when messages list updates
     ref.listen(chatViewModelProvider, (previous, next) {
@@ -82,6 +84,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
         title: const Text('AI Topic Assistant'),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+            tooltip: isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme',
+            onPressed: () {
+              ref.read(themeNotifierProvider.notifier).toggleTheme();
+            },
+          ),
           if (chatState.messages.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_outline),
@@ -90,7 +99,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
             ),
         ],
       ),
-
       body: Column(
         children: [
           // Chat Messages Display
@@ -111,7 +119,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     },
                   ),
           ),
-
 
           // Loading Indicator
           if (chatState.isLoading)
