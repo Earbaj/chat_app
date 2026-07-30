@@ -66,7 +66,8 @@ lib/
 - 🏛️ **Clean Architecture & SOLID Principles:** ডেটা, ডোমেইন এবং প্রেজেন্টেশন লেয়ার সম্পূর্ণরূপে আলাদা।
 - 🔄 **Riverpod State Management:** `flutter_riverpod` দিয়ে রিয়েক্টিভ ও টাইপ-সেফ স্টেট পরিচালনা।
 - 💉 **Dependency Injection (DI):** Riverpod Provider Containers দিয়ে স্কেলেবল ডিকাপল্ড ডিপেন্ডেন্সি ইনজেকশন।
-- 🤖 **Google Gemini AI Integration:** `dartantic_ai` এর মাধ্যমে Gemini `gemini-3-flash-preview` পাওয়ার্ড।
+- ⚡ **Real-Time Streaming Response:** ChatGPT-এর মতো টাইপিং স্টাইলে রিয়েল-টাইম চাংক (chunk) বাই চাংক উত্তর প্রদর্শন।
+- 📝 **ChatGPT-style Markdown Rendering:** `flutter_markdown` দিয়ে কোড ব্লক, বুলেট লিস্ট, বোল্ড টেক্সট ইত্যাদি রেন্ডার।
 - 🗑️ **Clear Chat History:** চ্যাট মুছে ফেলার সুনির্দিষ্ট ডায়ালগসহ সুবিধা।
 - 📋 **Copy to Clipboard:** প্রতি মেসেজে দ্রুত টেক্সট কপি বাটন এবং SnackBar নোটিফিকেশন।
 - 💡 **Quick Suggestion Chips:** চ্যাট খালি থাকলে এক ক্লিকে প্রশ্ন করার টপিক চিপস।
@@ -78,7 +79,7 @@ lib/
 
 ## 📜 Git Commit Roadmap for Beginners (শিক্ষার্থীদের জন্য ধাপে ধাপে গিট ইতিহাস)
 
-নতুনদের শেখার সুবিধার্থে প্রতিটি ফিচার আলাদা আলাদা গিট কমিট (`git commit`) এর মাধ্যমে যোগ করা হয়েছে:
+নতুনদের শেখার সুবিধার্থে প্রতিটি ফিচার আলাদা আলাদা গিট কমিট (`git commit`) এর মাধ্যমে যোগ করা হয়েছে এবং পূর্বের নন-স্ট্রিমড কোড কমেন্ট আকারে রাখা হয়েছে:
 
 | Step | Git Commit Message | Added Feature |
 | :---: | :--- | :--- |
@@ -87,8 +88,10 @@ lib/
 | **3** | `FEAT: Add quick topic suggestion chips for empty chat state` | তৈরি করা প্রম্পট চিপস (Suggestion Chips) |
 | **4** | `FEAT: Add dynamic Dark and Light theme switcher using Riverpod` | ডার্ক/লাইট থিম সুইচার (Riverpod) |
 | **5** | `FEAT: Add formatted timestamps to chat message bubbles` | মেসেজের নিচে সময় প্রদর্শন (Timestamp) |
+| **6** | `FEAT: Add Markdown formatting and Real-time Streaming AI response` | ChatGPT টাইপ Markdown ও Streaming টাইপিং |
 
 ---
+
 
 
 ## 🚀 Setup & Installation Guide (ধাপে ধাপে সেটআপ নির্দেশিকা)
