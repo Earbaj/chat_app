@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodel/chat_viewmodel.dart';
 import '../widgets/chat_bubble_widget.dart';
-import '../widgets/chat_input_field.dart';
+import '../widgets/suggestion_chips_widget.dart';
+
+// Inside _ChatViewState:
+  void _onSelectSuggestion(String topic) {
+    ref.read(chatViewModelProvider.notifier).sendMessage(topic);
+    _scrollToBottom();
+  }
+
 
 class ChatView extends ConsumerStatefulWidget {
   const ChatView({super.key});
@@ -89,10 +96,9 @@ class _ChatViewState extends ConsumerState<ChatView> {
           // Chat Messages Display
           Expanded(
             child: chatState.messages.isEmpty
-                ? const Center(
-                    child: Text(
-                      'write topic name and send',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                ? Center(
+                    child: SuggestionChipsWidget(
+                      onSelectTopic: _onSelectSuggestion,
                     ),
                   )
                 : ListView.builder(
@@ -105,6 +111,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     },
                   ),
           ),
+
 
           // Loading Indicator
           if (chatState.isLoading)
