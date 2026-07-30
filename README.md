@@ -93,6 +93,9 @@ lib/
 | **4** | `FEAT: Add dynamic Dark and Light theme switcher using Riverpod` | ডার্ক/লাইট থিম সুইচার (Riverpod) |
 | **5** | `FEAT: Add formatted timestamps to chat message bubbles` | মেসেজের নিচে সময় প্রদর্শন (Timestamp) |
 | **6** | `FEAT: Add Markdown formatting and Real-time Streaming AI response` | ChatGPT টাইপ Markdown ও Streaming টাইপিং |
+| **7** | `FEAT: Add local chat history caching using SharedPreferences and Clean Architecture` | SharedPreferences দিয়ে লোকাল চ্যাট ক্যাশিং |
+| **8** | `FEAT: Add smooth Gemini-style UI with avatars and typing cursor animation` | Gemini টাইপ স্মুথ UI, অ্যাভাটার ও ব্লিঙ্কিং কার্সর |
+
 
 ---
 
