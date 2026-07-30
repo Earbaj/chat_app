@@ -28,12 +28,14 @@
 ```text
 lib/
 ├── core/
-│   └── di/
-│       └── injection_container.dart     # Riverpod Compile-safe Dependency Injection (DI)
+│   ├── di/
+│   │   └── injection_container.dart     # Riverpod Compile-safe Dependency Injection (DI)
+│   └── theme/
+│       └── theme_provider.dart          # Riverpod Dynamic Light/Dark Theme Notifier
 │
 ├── data/                                # 1. DATA LAYER (ডেটা সোর্স ও মডেল)
 │   ├── datasources/
-│   │   └── chat_remote_data_source.dart # Gemini API integration via dartantic_ai
+│   │   └── chat_remote_data_source.dart # Gemini API Streaming integration via dartantic_ai
 │   ├── models/
 │   │   └── chat_message_model.dart      # Data Model & JSON mapping
 │   └── repositories/
@@ -55,9 +57,11 @@ lib/
     ├── views/
     │   └── chat_view.dart               # Main UI View (ConsumerStatefulWidget)
     └── widgets/
-        ├── chat_bubble_widget.dart      # Chat Bubble Component
-        └── chat_input_field.dart        # Input Field & Send Button Component
+        ├── chat_bubble_widget.dart      # Markdown & Copy Message Bubble Component
+        ├── chat_input_field.dart        # Input Field & Send Button Component
+        └── suggestion_chips_widget.dart # Quick Prompt Chips Component
 ```
+
 
 ---
 
