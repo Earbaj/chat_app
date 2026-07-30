@@ -23,7 +23,7 @@ class MyChatApp extends StatelessWidget {
 }
 
 // ----------------------------------------------------
-// ১. চ্যাট বার্তা মডেল (Message Model)
+// ১. chat model (Message Model)
 // ----------------------------------------------------
 class ChatBubbleItem {
   final String text;
@@ -33,7 +33,7 @@ class ChatBubbleItem {
 }
 
 // ----------------------------------------------------
-// ২. API কল ফাংশন
+// ২. API call function
 // ----------------------------------------------------
 const String myApiKey = 'AIzaSyAbca7OBztaW1xq61hw2MtUhV7gDu673xs';
 
@@ -49,7 +49,7 @@ Future<String> fetchAiResponse(String topic) async {
 }
 
 // ----------------------------------------------------
-// ৩. চ্যাট স্ক্রিন UI (ChatScreen)
+// ৩. chat screen UI (ChatScreen)
 // ----------------------------------------------------
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -71,14 +71,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _textController.clear();
 
-    // ১. ইউজারের মেসেজ চ্যাট লিস্টে যোগ করা
+    // ১. add user message to chat list
     setState(() {
       _messages.add(ChatBubbleItem(text: prompt, isUser: true));
       _isLoading = true;
     });
     _scrollToBottom();
 
-    // ২. API থেকে AI উত্তর নিয়ে আসা
+    // ২. get answer from ai using api
     try {
       final String aiReply = await fetchAiResponse(prompt);
       setState(() {
@@ -96,7 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollToBottom();
   }
 
-  // 🔹 চ্যাট লিস্ট অটো স্ক্রোল করে নিচে নামানো
+  // 🔹 auto scroll chat list
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -118,12 +118,12 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          // 🔝 ১. চ্যাট মেসেজ ডিসপ্লে এলাকা (ListView)
+          // 🔝 ১. chat message display (ListView)
           Expanded(
             child: _messages.isEmpty
                 ? const Center(
               child: Text(
-                'নিচে টপিকের নাম লিখে সেন্ড করুন...',
+                'write topic name and send',
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
             )
@@ -138,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
 
-          // ⏳ লোডিং ইন্ডিকেটর (AI যখন ভাবছে)
+          // ⏳ loading indicator
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -159,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
 
-          // 🔻 ২. নিচে ইনপুট ফিল্ড ও সেন্ড বাটন
+          // 🔻 ২. input field send button
           Container(
             padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
@@ -197,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // 🔹 চ্যাট বাবল ডিজাইন করার উইজেট
+  // 🔹 chat buble widget
   Widget _buildChatBubble(ChatBubbleItem item) {
     return Align(
       alignment: item.isUser ? Alignment.centerRight : Alignment.centerLeft,
