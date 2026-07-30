@@ -67,10 +67,29 @@ lib/
 - 🔄 **Riverpod State Management:** `flutter_riverpod` দিয়ে রিয়েক্টিভ ও টাইপ-সেফ স্টেট পরিচালনা।
 - 💉 **Dependency Injection (DI):** Riverpod Provider Containers দিয়ে স্কেলেবল ডিকাপল্ড ডিপেন্ডেন্সি ইনজেকশন।
 - 🤖 **Google Gemini AI Integration:** `dartantic_ai` এর মাধ্যমে Gemini `gemini-3-flash-preview` পাওয়ার্ড।
+- 🗑️ **Clear Chat History:** চ্যাট মুছে ফেলার সুনির্দিষ্ট ডায়ালগসহ সুবিধা।
+- 📋 **Copy to Clipboard:** প্রতি মেসেজে দ্রুত টেক্সট কপি বাটন এবং SnackBar নোটিফিকেশন।
+- 💡 **Quick Suggestion Chips:** চ্যাট খালি থাকলে এক ক্লিকে প্রশ্ন করার টপিক চিপস।
+- 🌓 **Dynamic Dark / Light Theme:** অ্যাপের থিম তাৎক্ষণিক পরিবর্তন করার সুবিধা।
+- ⏰ **Formatted Timestamp:** চ্যাট মেসেজে সময় (যেমন: `10:45 AM`) প্রদর্শনের সুবিধা।
 - 🔐 **নিরাপদ API Key নিরাপত্তা:** `.env` ফাইলের মাধ্যমে সিকিউর API key ব্যবস্থাপনা।
-- 🎨 **Material 3 Design System:** আধুনিক ও দৃষ্টিনন্দন রেসপন্সিভ ইউআই।
 
 ---
+
+## 📜 Git Commit Roadmap for Beginners (শিক্ষার্থীদের জন্য ধাপে ধাপে গিট ইতিহাস)
+
+নতুনদের শেখার সুবিধার্থে প্রতিটি ফিচার আলাদা আলাদা গিট কমিট (`git commit`) এর মাধ্যমে যোগ করা হয়েছে:
+
+| Step | Git Commit Message | Added Feature |
+| :---: | :--- | :--- |
+| **1** | `FEAT: Add clear chat history feature with confirmation dialog` | চ্যাট মুছে ফেলার কনফার্মেশন ডায়ালগ |
+| **2** | `FEAT: Add copy message to clipboard functionality` | টেক্সট কপি করার বাটন ও SnackBar |
+| **3** | `FEAT: Add quick topic suggestion chips for empty chat state` | তৈরি করা প্রম্পট চিপস (Suggestion Chips) |
+| **4** | `FEAT: Add dynamic Dark and Light theme switcher using Riverpod` | ডার্ক/লাইট থিম সুইচার (Riverpod) |
+| **5** | `FEAT: Add formatted timestamps to chat message bubbles` | মেসেজের নিচে সময় প্রদর্শন (Timestamp) |
+
+---
+
 
 ## 🚀 Setup & Installation Guide (ধাপে ধাপে সেটআপ নির্দেশিকা)
 
