@@ -40,11 +40,12 @@ class SuggestionChipsWidget extends StatelessWidget {
           // টাইটেল হেডার
           Text(
             'Welcome to AI Topic Assistant!',
-            style: Theme.of(context).headlineSmall?.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
             textAlign: TextAlign.center,
           ),
+
           const SizedBox(height: 8),
           
           // সাব-টাইটেল গাইড
