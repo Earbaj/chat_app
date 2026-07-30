@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dartantic_ai/dartantic_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  //load env file first
+  await dotenv.load(fileName: ".env");
   runApp(const MyChatApp());
 }
 
@@ -35,7 +38,7 @@ class ChatBubbleItem {
 // ----------------------------------------------------
 // ২. API call function
 // ----------------------------------------------------
-const String myApiKey = 'AIzaSyAbca7OBztaW1xq61hw2MtUhV7gDu673xs';
+String myApiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
 
 Future<String> fetchAiResponse(String topic) async {
   final provider = GoogleProvider(apiKey: myApiKey);
