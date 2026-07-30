@@ -135,10 +135,17 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     itemCount: chatState.messages.length,
                     itemBuilder: (context, index) {
                       final item = chatState.messages[index];
-                      return ChatBubbleWidget(message: item);
+                      final isLastMessage = index == chatState.messages.length - 1;
+                      final isStreamingNow = isLastMessage && chatState.isLoading && !item.isUser;
+                      
+                      return ChatBubbleWidget(
+                        message: item,
+                        isStreaming: isStreamingNow,
+                      );
                     },
                   ),
           ),
+
 
           // ২. লোডিং ইন্ডিকেটর (Gemini Thinking...)
           if (chatState.isLoading)
