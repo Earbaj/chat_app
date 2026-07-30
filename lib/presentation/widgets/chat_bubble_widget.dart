@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../domain/entities/chat_message_entity.dart';
 
 class ChatBubbleWidget extends StatelessWidget {
@@ -54,6 +55,11 @@ class ChatBubbleWidget extends StatelessWidget {
           crossAxisAlignment:
               isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
+            /*
+            // ----------------------------------------------------
+            // PREVIOUS (Simple Text Widget): প্লেইন টেক্সট দেখায়
+            // (শিক্ষার জন্য কমেন্ট করা হলো)
+            // ----------------------------------------------------
             Text(
               message.text,
               style: TextStyle(
@@ -62,6 +68,36 @@ class ChatBubbleWidget extends StatelessWidget {
                 height: 1.4,
               ),
             ),
+            */
+
+            // ----------------------------------------------------
+            // NEW (MarkdownBody Widget): ChatGPT-এর মতো Rich Formatting
+            // (কোড ব্লক, বুলেট লিস্ট, বোল্ড টেক্সট ইত্যাদি রেন্ডার করবে)
+            // ----------------------------------------------------
+            MarkdownBody(
+              data: message.text.isEmpty ? '...' : message.text,
+              selectable: true,
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                p: TextStyle(
+                  color: isUser ? colorScheme.onPrimary : colorScheme.onSurface,
+                  fontSize: 15,
+                  height: 1.4,
+                ),
+                code: TextStyle(
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                  fontFamily: 'monospace',
+                ),
+                codeblockDecoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black54
+                      : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 6),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -112,6 +148,4 @@ class ChatBubbleWidget extends StatelessWidget {
       ),
     );
   }
-
 }
-

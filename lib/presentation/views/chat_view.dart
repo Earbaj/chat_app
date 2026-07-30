@@ -72,12 +72,16 @@ class _ChatViewState extends ConsumerState<ChatView> {
     final themeMode = ref.watch(themeNotifierProvider);
     final isDark = themeMode == ThemeMode.dark;
 
-    // Auto scroll when messages list updates
+    // Auto scroll when messages list updates or stream text appends
     ref.listen(chatViewModelProvider, (previous, next) {
-      if (previous?.messages.length != next.messages.length) {
+      if (previous?.messages.length != next.messages.length ||
+          (next.messages.isNotEmpty &&
+              previous?.messages.lastOrNull?.text.length !=
+                  next.messages.lastOrNull?.text.length)) {
         _scrollToBottom();
       }
     });
+
 
     return Scaffold(
       appBar: AppBar(
