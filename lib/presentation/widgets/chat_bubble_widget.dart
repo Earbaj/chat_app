@@ -18,10 +18,20 @@ class ChatBubbleWidget extends StatelessWidget {
     );
   }
 
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour == 0
+        ? 12
+        : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute $period';
+  }
+
   @override
   Widget build(BuildContext context) {
     final isUser = message.isUser;
     final colorScheme = Theme.of(context).colorScheme;
+    final formattedTime = _formatTime(message.timestamp);
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -52,40 +62,56 @@ class ChatBubbleWidget extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            const SizedBox(height: 4),
-            InkWell(
-              onTap: () => _copyToClipboard(context),
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.copy_rounded,
-                      size: 13,
-                      color: isUser
-                          ? colorScheme.onPrimary.withValues(alpha: 0.7)
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Copy',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: isUser
-                            ? colorScheme.onPrimary.withValues(alpha: 0.7)
-                            : colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+            const SizedBox(height: 6),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  formattedTime,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isUser
+                        ? colorScheme.onPrimary.withValues(alpha: 0.6)
+                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () => _copyToClipboard(context),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.copy_rounded,
+                          size: 12,
+                          color: isUser
+                              ? colorScheme.onPrimary.withValues(alpha: 0.7)
+                              : colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          'Copy',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: isUser
+                                ? colorScheme.onPrimary.withValues(alpha: 0.7)
+                                : colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
 }
 
