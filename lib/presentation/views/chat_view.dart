@@ -36,6 +36,29 @@ class _ChatViewState extends ConsumerState<ChatView> {
     });
   }
 
+  void _confirmClearChat() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Chat History'),
+        content: const Text('Are you sure you want to delete all chat messages?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(chatViewModelProvider.notifier).clearChat();
+              Navigator.pop(context);
+            },
+            child: const Text('Clear', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatViewModelProvider);
@@ -51,7 +74,16 @@ class _ChatViewState extends ConsumerState<ChatView> {
       appBar: AppBar(
         title: const Text('AI Topic Assistant'),
         centerTitle: true,
+        actions: [
+          if (chatState.messages.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: 'Clear Chat',
+              onPressed: _confirmClearChat,
+            ),
+        ],
       ),
+
       body: Column(
         children: [
           // Chat Messages Display

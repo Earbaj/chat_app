@@ -45,7 +45,12 @@ class ChatViewModel extends StateNotifier<ChatState> {
       );
     }
   }
+
+  void clearChat() {
+    state = ChatState.initial();
+  }
 }
+
 
 // Riverpod Provider for ViewModel (Injecting UseCase from DI container)
 final chatViewModelProvider =
